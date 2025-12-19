@@ -1,4 +1,4 @@
-# Zarli iOS SDK
+# ZarliSDKSwift
 
 Zarli iOS SDK allows mobile publishers to easily integrate interactive HTML5 playable ads into their apps.
 
@@ -8,7 +8,23 @@ Zarli iOS SDK allows mobile publishers to easily integrate interactive HTML5 pla
 
 1. In Xcode, go to **File > Add Package Dependencies...**
 2. Enter the repository URL of this package.
-3. Select the `ZarliSDK` library.
+3. Select the `ZarliSDKSwift` library.
+
+## Important Configuration
+
+### App Transport Security (ATS)
+The Zarli SDK currently communicates with ad servers over HTTP. You must configure your `Info.plist` to allow arbitrary loads or add an exception domain.
+
+Add the following to your `Info.plist`:
+
+```xml
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+</dict>
+```
+*Note: In a production app, it is recommended to specific exception domains instead of allowing all arbitrary loads.*
 
 ## Usage
 
@@ -17,7 +33,7 @@ Zarli iOS SDK allows mobile publishers to easily integrate interactive HTML5 pla
 In your `AppDelegate` or at app launch:
 
 ```swift
-import ZarliSDK
+import ZarliSDKSwift
 
 ZarliSDK.shared.initialize(apiKey: "YOUR_API_KEY") { success in
     print("Zarli SDK Initialized: \(success)")
@@ -30,7 +46,7 @@ In your View Controller:
 
 ```swift
 import UIKit
-import ZarliSDK
+import ZarliSDKSwift
 
 class ViewController: UIViewController, ZarliInterstitialAdDelegate {
     var interstitialAd: ZarliInterstitialAd?

@@ -1,5 +1,5 @@
 import XCTest
-@testable import ZarliSDK
+@testable import ZarliSDKSwift
 
 final class ZarliSDKTests: XCTestCase {
     func testExample() throws {
