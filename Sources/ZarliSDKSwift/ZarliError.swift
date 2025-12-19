@@ -9,4 +9,8 @@ public enum ZarliError: Error {
     case timeout
     /// An internal error occurred.
     case internalError(String)
+    
+    case encodingFailed
+    case noData
+    case noBid
 }
