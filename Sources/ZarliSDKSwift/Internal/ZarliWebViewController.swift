@@ -10,10 +10,16 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler {
     weak var delegate: ZarliWebViewControllerDelegate?
     private var webView: WKWebView!
     
+    private var pendingURL: URL?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupWebView()
         setupCloseButton()
+        
+        if let url = pendingURL {
+            load(url: url)
+        }
     }
     
     private func setupWebView() {
@@ -63,8 +69,12 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func load(url: URL) {
-        let request = URLRequest(url: url)
-        webView.load(request)
+        if let webView = webView {
+            let request = URLRequest(url: url)
+            webView.load(request)
+        } else {
+            pendingURL = url
+        }
     }
     
     // MARK: - WKScriptMessageHandler

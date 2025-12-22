@@ -25,8 +25,8 @@ public class ZarliInterstitialAd {
     private var billingURL: URL?
     
     // Server Constants
-    private let bidEndpoint = "http://us.gamingnow.co:80/bid"
-    private let billingEndpointBase = "http://us.gamingnow.co:80/v1/billing"
+    private let bidEndpoint = "https://ads-bidding-server-653394998024.us-central1.run.app/bid"
+    private let billingEndpointBase = "https://ads-bidding-server-653394998024.us-central1.run.app/v1/billing"
     
     public init(adUnitId: String) {
         self.adUnitId = adUnitId
