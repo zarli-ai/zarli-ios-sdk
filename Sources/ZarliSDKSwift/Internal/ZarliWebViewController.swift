@@ -124,7 +124,7 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler, WKNaviga
             case "click":
                 delegate?.webViewControllerDidClick(self)
             default:
-
+                break
             }
         }
     }
