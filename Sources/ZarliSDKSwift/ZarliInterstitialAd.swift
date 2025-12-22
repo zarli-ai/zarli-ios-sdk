@@ -19,76 +19,83 @@ public class ZarliInterstitialAd {
     public weak var delegate: ZarliInterstitialAdDelegate?
     public let adUnitId: String
     
+    /// Returns true if the ad has been loaded and is ready to show
+    public private(set) var isReady: Bool = false
+    
     private var webViewController: ZarliWebViewController?
     private var bidId: String?
     private var admURL: URL?
     private var billingURL: URL?
     
     // Server Constants
-    private let bidEndpoint = "https://ads-bidding-server-653394998024.us-central1.run.app/bid"
-    private let billingEndpointBase = "https://ads-bidding-server-653394998024.us-central1.run.app/v1/billing"
+    private let bidEndpoint = "https://ads-bidding-server-3ul2p3uheq-uc.a.run.app/bid"
+    private let billingEndpointBase = "https://ads-bidding-server-3ul2p3uheq-uc.a.run.app/v1/billing"
     
     public init(adUnitId: String) {
         self.adUnitId = adUnitId
     }
     
     public func load() {
-        // 1. Construct Bid Request
-        let bidRequest = createBidRequest()
+        ZarliLogger.debug("Loading ad for Unit ID: \(adUnitId)")
         
-        // 2. Serialize
+        // 1. Fetch User Agent (Async)
+        UserAgentFetcher.shared.fetch { [weak self] ua in
+            guard let self = self else { return }
+            self.performBidRequest(ua: ua)
+        }
+    }
+    
+    private func performBidRequest(ua: String) {
+        // 2. Construct Bid Request
+        let bidRequest = createBidRequest(ua: ua)
+        
+        // 3. Serialize
         guard let jsonData = try? JSONEncoder().encode(bidRequest) else {
-            delegate?.ad(self, didFailToLoad: ZarliError.encodingFailed)
+            notifyDelegateDidFail(ZarliError.encodingFailed)
             return
         }
         
-        // 3. Send Request
+        // 4. Send Request
         guard let url = URL(string: bidEndpoint) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
         
-        print("Sending Bid Request to: \(url.absoluteString)")
+        ZarliLogger.debug("Sending Bid Request to: \(url.absoluteString)")
         
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
             if let error = error {
-                DispatchQueue.main.async {
-                    self.delegate?.ad(self, didFailToLoad: error)
-                }
+                ZarliLogger.error("Bid Request failed: \(error.localizedDescription)")
+                self.notifyDelegateDidFail(error)
                 return
             }
             
             guard let data = data else {
-                DispatchQueue.main.async {
-                    self.delegate?.ad(self, didFailToLoad: ZarliError.noData)
-                }
+                self.notifyDelegateDidFail(ZarliError.noData)
                 return
             }
             
-            // 4. Parse Response
+            // 5. Parse Response
             do {
                 let bidResponse = try JSONDecoder().decode(BidResponse.self, from: data)
                 self.handleBidResponse(bidResponse)
             } catch {
-                print("Decoding error: \(error)")
-                DispatchQueue.main.async {
-                    self.delegate?.ad(self, didFailToLoad: error)
-                }
+                ZarliLogger.error("Decoding error: \(error.localizedDescription)")
+                self.notifyDelegateDidFail(error)
             }
         }.resume()
     }
     
-    private func createBidRequest() -> BidRequest {
+    private func createBidRequest(ua: String) -> BidRequest {
         let bundleId = Bundle.main.bundleIdentifier ?? "unknown.bundle"
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         
         // Basic Device Info
         let device = UIDevice.current
         let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-        let ua = "Mozilla/5.0 (iPhone; CPU iPhone OS \(device.systemVersion.replacingOccurrences(of: ".", with: "_")) like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
         
         let deviceInfo = DeviceInfo(
             ifa: idfa,
@@ -107,7 +114,7 @@ public class ZarliInterstitialAd {
         
         let imp = Impression(
             id: "1",
-            banner: nil, // Interstitial usually doesn't need banner dims or uses full screen, sending interstitial object
+            banner: nil,
             interstitial: Interstitial()
         )
         
@@ -120,24 +127,15 @@ public class ZarliInterstitialAd {
               let bid = seatBid.bid.first,
               let adm = bid.adm,
               let url = URL(string: adm) else {
-            DispatchQueue.main.async {
-                self.delegate?.ad(self, didFailToLoad: ZarliError.noBid)
-            }
+            notifyDelegateDidFail(ZarliError.noBid)
             return
         }
         
         self.bidId = response.bidid
         self.admURL = url
         
-        // Prefer BURL from response, fallback to manual construction if needed
         if let burlString = bid.burl, let burl = URL(string: burlString) {
-             // Fix localhost issue if present in response from server
-             if burlString.contains("localhost"), let range = burlString.range(of: "localhost:80") {
-                 let fixedString = burlString.replacingCharacters(in: range, with: "us.gamingnow.co:80")
-                 self.billingURL = URL(string: fixedString)
-             } else {
-                 self.billingURL = burl
-             }
+             self.billingURL = burl
         } else if let bidId = self.bidId {
              // Manual construction as fallback
              let urlString = "\(billingEndpointBase)?bidid=\(bidId)&win=1"
@@ -145,12 +143,34 @@ public class ZarliInterstitialAd {
         }
         
         DispatchQueue.main.async {
+            self.isReady = true
+            ZarliLogger.debug("Ad loaded successfully")
             self.delegate?.adDidLoad(self)
         }
     }
     
-    public func show(from viewController: UIViewController) {
-        guard let admURL = self.admURL else { return }
+    /// Shows the interstitial ad. If viewController is not provided, the SDK will attempt to find the top-most controller.
+    public func show(from viewController: UIViewController? = nil) {
+        // 1. Check readiness
+        guard isReady else {
+            ZarliLogger.error("Attempted to show ad that is not ready.")
+            return
+        }
+        
+        // 2. Check Ad URL
+        guard let admURL = self.admURL else {
+            ZarliLogger.error("Attempted to show ad but admURL is missing")
+            return
+        }
+        
+        // 3. Resolve View Controller
+        guard let presenter = viewController ?? UIUtils.getTopViewController() else {
+            ZarliLogger.error("Could not find a View Controller to present the ad.")
+            return
+        }
+        
+        // 4. Mark as consumed
+        self.isReady = false
         
         let webVC = ZarliWebViewController()
         webVC.delegate = self
@@ -159,7 +179,7 @@ public class ZarliInterstitialAd {
         
         self.webViewController = webVC
         
-        viewController.present(webVC, animated: true) { [weak self] in
+        presenter.present(webVC, animated: true) { [weak self] in
             guard let self = self else { return }
             self.delegate?.adDidShow(self)
             self.fireBillingPixel()
@@ -168,8 +188,15 @@ public class ZarliInterstitialAd {
     
     private func fireBillingPixel() {
         guard let billingURL = self.billingURL else { return }
-        print("Firing Billing Pixel: \(billingURL.absoluteString)")
+        ZarliLogger.debug("Firing Billing Pixel: \(billingURL.absoluteString)")
         URLSession.shared.dataTask(with: billingURL).resume()
+    }
+    
+    private func notifyDelegateDidFail(_ error: Error) {
+        DispatchQueue.main.async {
+            self.isReady = false
+            self.delegate?.ad(self, didFailToLoad: error)
+        }
     }
 }
 
