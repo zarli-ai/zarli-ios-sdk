@@ -117,12 +117,28 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler, WKNaviga
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard message.name == "zarli" else { return }
         
+        // Handle string messages (legacy)
         if let body = message.body as? String {
             switch body {
             case "close":
                 delegate?.webViewControllerDidClose(self)
             case "click":
                 delegate?.webViewControllerDidClick(self)
+            default:
+                break
+            }
+        }
+        // Handle dictionary messages (new format)
+        else if let body = message.body as? [String: Any],
+                let action = body["action"] as? String {
+            switch action {
+            case "openURL":
+                if let urlString = body["url"] as? String,
+                   let url = URL(string: urlString) {
+                    // Open URL in Safari
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    ZarliLogger.debug("Opening URL in Safari: \(urlString)")
+                }
             default:
                 break
             }
