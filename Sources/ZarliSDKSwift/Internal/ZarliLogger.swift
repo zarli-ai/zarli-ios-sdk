@@ -11,11 +11,16 @@ class ZarliLogger {
     
     static func debug(_ message: String) {
         guard logLevel == .debug else { return }
-        print("[ZarliSDK] [DEBUG] \(message)")
+
     }
     
     static func error(_ message: String) {
         guard logLevel != .none else { return }
-        print("[ZarliSDK] [ERROR] \(message)")
+
+    }
+    
+    static func warning(_ message: String) {
+        guard logLevel == .debug else { return }
+
     }
 }
