@@ -6,11 +6,13 @@ protocol ZarliWebViewControllerDelegate: AnyObject {
     func webViewControllerDidClick(_ controller: ZarliWebViewController)
 }
 
-class ZarliWebViewController: UIViewController, WKScriptMessageHandler {
+class ZarliWebViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate {
     weak var delegate: ZarliWebViewControllerDelegate?
     private var webView: WKWebView!
     
     private var pendingURL: URL?
+    private var retryCount: Int = 0
+    private let maxRetries: Int = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +39,7 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler {
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.scrollView.isScrollEnabled = false
         webView.backgroundColor = .black
+        webView.navigationDelegate = self
         
         view.addSubview(webView)
     }
@@ -70,11 +73,43 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler {
     
     func load(url: URL) {
         if let webView = webView {
-            let request = URLRequest(url: url)
+            ZarliLogger.debug("WebViewController loading: \(url.absoluteString)")
+            let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10.0)
             webView.load(request)
         } else {
             pendingURL = url
         }
+    }
+    
+    // MARK: - WKNavigationDelegate
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        ZarliLogger.error("WebView failed provisional load: \(error.localizedDescription) (Code: \((error as NSError).code))")
+        handleLoadError(error)
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        ZarliLogger.error("WebView failed load: \(error.localizedDescription)")
+        handleLoadError(error)
+    }
+    
+    private func handleLoadError(_ error: Error) {
+        // Check for DNS failure or connection lost
+        let code = (error as NSError).code
+        if code == -1003 || code == -1001 || code == -1009 { // Host not found, Timeout, or Offline
+            if retryCount < maxRetries {
+                retryCount += 1
+                ZarliLogger.warning("Retrying WebView load (Attempt \(retryCount)/\(maxRetries))...")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                    guard let self = self, let url = self.webView.url ?? self.pendingURL else { return }
+                    self.load(url: url)
+                }
+                return
+            }
+        }
+        
+        // Critical failure: Close or show error state?
+        // For now, we just log. The native close button allows exit.
     }
     
     // MARK: - WKScriptMessageHandler
@@ -89,7 +124,7 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler {
             case "click":
                 delegate?.webViewControllerDidClick(self)
             default:
-                print("Unhandled message from ad: \(body)")
+
             }
         }
     }

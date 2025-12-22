@@ -60,6 +60,12 @@ public class ZarliInterstitialAd {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Add API Key for authentication
+        if let apiKey = ZarliSDK.shared.apiKey {
+            request.setValue(apiKey, forHTTPHeaderField: "X-API-Key")
+        }
+        
         request.httpBody = jsonData
         
         ZarliLogger.debug("Sending Bid Request to: \(url.absoluteString)")
