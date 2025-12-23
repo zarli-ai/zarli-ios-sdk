@@ -16,25 +16,40 @@ The official iOS SDK for the Zarli Ad Network. Enables mobile publishers to seam
 2. Paste the repository URL: `https://github.com/zarli-ai/zarli-ios-sdk.git`
 3. Select the `ZarliSDKSwift` library and add it to your target
 
+### CocoaPods
+
+Add the following line to your `Podfile`:
+
+```ruby
+pod 'ZarliSDKSwift', :git => 'https://github.com/zarli-ai/zarli-ios-sdk.git'
+```
+
+
 ## Privacy & Compliance
 
 ### Apple Privacy Manifest
 ZarliSDK includes a `PrivacyInfo.xcprivacy` file that explicitly declares usage of the **Advertising Identifier (IDFA)** for tracking and ad attribution purposes, ensuring compliance with Apple's App Store requirements.
 
-### App Transport Security (ATS)
-While the Zarli SDK communicates with ad servers over secure HTTPS, ad creatives delivered by third-party bidders may occasionally require HTTP resources.
+### Info.plist Configuration
 
-To ensure all ads render correctly, add the following to your app's `Info.plist`:
+To ensure full functionality and compliance, add the following keys to your `Info.plist`:
 
-```xml
-<key>NSAppTransportSecurity</key>
-<dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-</dict>
-```
+1. **App Transport Security (ATS)**
+   Ad creatives often require resources from non-secure (HTTP) domains.
+   ```xml
+   <key>NSAppTransportSecurity</key>
+   <dict>
+       <key>NSAllowsArbitraryLoads</key>
+       <true/>
+   </dict>
+   ```
 
-> **Note:** For strict security requirements, configure specific exception domains, though this may limit ad variety.
+2. **User Tracking Usage Description**
+   Required for requesting permission to track the user (IDFA access).
+   ```xml
+   <key>NSUserTrackingUsageDescription</key>
+   <string>This identifier will be used to deliver personalized ads to you.</string>
+   ```
 
 ## Usage
 
@@ -44,11 +59,33 @@ Initialize the SDK in your `AppDelegate` or application entry point:
 
 ```swift
 import ZarliSDKSwift
+import AppTrackingTransparency // Important for iOS 14+
 
 // In application(_:didFinishLaunchingWithOptions:)
-let config = ZarliConfiguration(apiKey: "YOUR_API_KEY", isDebugMode: false)
-ZarliSDK.shared.initialize(configuration: config) { success in
-    // SDK is ready
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+    // Request tracking permission (iOS 14+)
+    // Note: It is best practice to show a pre-prompt explaining why you need this permission
+    if #available(iOS 14, *) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                // Initialize Zarli SDK regardless of status, but IDFA will only be available if authorized
+                self.initializeSDK()
+            }
+        }
+    } else {
+        // Fallback for earlier versions
+        initializeSDK()
+    }
+    
+    return true
+}
+
+func initializeSDK() {
+    let config = ZarliConfiguration(apiKey: "YOUR_API_KEY", isDebugMode: false)
+    ZarliSDK.shared.initialize(configuration: config) { success in
+        print("Zarli SDK Initialized: \(success)")
+    }
 }
 ```
 
@@ -102,9 +139,41 @@ class ViewController: UIViewController, ZarliInterstitialAdDelegate {
 
 ## Best Practices
 
-- **Pre-loading**: Call `.load()` well before displaying the ad (e.g., at level start) to ensure zero latency
-- **Thread Safety**: All delegate callbacks are dispatched on the main thread, allowing safe UI updates
-- **View Controller**: The SDK automatically finds the top-most view controller when calling `show()` without parameters
+### Pre-loading
+Call `.load()` well before displaying the ad (e.g., at level start) to ensure zero latency.
+
+```swift
+// ✅ Good - Load at level start
+override func viewDidLoad() {
+    super.viewDidLoad()
+    interstitialAd = ZarliInterstitialAd(adUnitId: "level_complete_ad")
+    interstitialAd?.delegate = self
+    interstitialAd?.load()
+}
+
+// ❌ Bad - Load right before showing
+func showAd() {
+    interstitialAd?.load() // User will wait!
+    interstitialAd?.show()
+}
+```
+
+### Memory Management
+The SDK handles internal memory management, but strictly holds a `weak` reference to your delegate. Ensure your view controller persists while the ad is loading.
+
+### Thread Safety
+All delegate callbacks are dispatched on the main thread, allowing safe UI updates.
+
+## Troubleshooting
+
+### Ad fails to load
+- **Error: Network**: Check your internet connection.
+- **Logs**: Enable `isDebugMode: true` in `ZarliConfiguration` to see detailed logs in the console.
+
+### Ad doesn't show
+- Ensure `ad.isReady` returns `true`.
+- Verify you are calling `show()` from a visible View Controller.
+- Check if `NSAppTransportSecurity` is configured correctly in `Info.plist`.
 
 ## API Reference
 
@@ -125,4 +194,4 @@ For issues or integration help, please open an issue on [GitHub](https://github.
 
 ## License
 
-Proprietary - Zarli AI
+MIT License - Copyright (c) 2025 Zarli AI

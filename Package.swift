@@ -18,7 +18,17 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "ZarliSDKSwift"),
+            name: "ZarliSDKSwift",
+            resources: [
+                .process("PrivacyInfo.xcprivacy")
+            ],
+            swiftSettings: [
+                // Optimize for size in release builds
+                .unsafeFlags(["-Osize"], .when(configuration: .release)),
+                // Enable link-time optimization
+                .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release)),
+            ]
+        ),
         .testTarget(
             name: "ZarliSDKSwiftTests",
             dependencies: ["ZarliSDKSwift"]),

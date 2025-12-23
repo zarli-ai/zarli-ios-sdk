@@ -1,4 +1,3 @@
-import WebKit
 import UIKit
 
 class UserAgentFetcher {
@@ -13,21 +12,18 @@ class UserAgentFetcher {
             return
         }
         
-        DispatchQueue.main.async {
-            // WKWebView must be created on main thread
-            let webView = WKWebView()
-            webView.evaluateJavaScript("navigator.userAgent") { [weak self] result, error in
-                if let ua = result as? String {
-                    self?.cachedUserAgent = ua
-                    completion(ua)
-                } else {
-                    // Fallback if something goes wrong
-                    let device = UIDevice.current
-                    let fallback = "Mozilla/5.0 (\(device.model); CPU OS \(device.systemVersion.replacingOccurrences(of: ".", with: "_")) like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
-                    self?.cachedUserAgent = fallback
-                    completion(fallback)
-                }
-            }
-        }
+        let userAgent = buildUserAgent()
+        cachedUserAgent = userAgent
+        completion(userAgent)
+    }
+    
+    private func buildUserAgent() -> String {
+        let device = UIDevice.current
+        let systemVersion = device.systemVersion.replacingOccurrences(of: ".", with: "_")
+        let model = device.model
+        
+        // Construct a standard iOS user agent string
+        // Format: Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148
+        return "Mozilla/5.0 (\(model); CPU \(model) OS \(systemVersion) like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
     }
 }

@@ -26,13 +26,7 @@ struct DeviceInfo: Codable {
 
 struct Impression: Codable {
     let id: String
-    let banner: Banner?
     let interstitial: Interstitial?
-}
-
-struct Banner: Codable {
-    let w: Int
-    let h: Int
 }
 
 struct Interstitial: Codable {}
@@ -53,7 +47,7 @@ struct Bid: Codable {
     let id: String?
     let impid: String
     let price: Double
-    let adm: String? // Ad Markup (URL or HTML)
-    let iurl: String? // Image URL
-    let burl: String? // Billing URL
+    let adm: String?
+    let iurl: String?
+    let burl: String?
 }
