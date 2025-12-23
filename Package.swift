@@ -22,12 +22,7 @@ let package = Package(
             resources: [
                 .process("PrivacyInfo.xcprivacy")
             ],
-            swiftSettings: [
-                // Optimize for size in release builds
-                .unsafeFlags(["-Osize"], .when(configuration: .release)),
-                // Enable link-time optimization
-                .unsafeFlags(["-cross-module-optimization"], .when(configuration: .release)),
-            ]
+
         ),
         .testTarget(
             name: "ZarliSDKSwiftTests",
