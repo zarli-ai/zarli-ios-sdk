@@ -37,7 +37,7 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler, WKNaviga
         
         webView = WKWebView(frame: view.bounds, configuration: config)
         webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        webView.scrollView.isScrollEnabled = false
+        webView.scrollView.isScrollEnabled = true
         webView.backgroundColor = .black
         webView.navigationDelegate = self
         
