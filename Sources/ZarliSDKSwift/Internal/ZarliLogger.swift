@@ -1,26 +1,26 @@
 import Foundation
 
-enum ZarliLogLevel {
-    case none
-    case error
-    case debug
-}
-
 class ZarliLogger {
-    static var logLevel: ZarliLogLevel = .error // Default to error only to be quiet
+    #if DEBUG
+    static var isDebugEnabled: Bool = false
     
     static func debug(_ message: String) {
-        guard logLevel == .debug else { return }
-
-    }
-    
-    static func error(_ message: String) {
-        guard logLevel != .none else { return }
-
+        guard isDebugEnabled else { return }
+        print("[Zarli Debug] \(message)")
     }
     
     static func warning(_ message: String) {
-        guard logLevel == .debug else { return }
-
+        guard isDebugEnabled else { return }
+        print("[Zarli Warning] \(message)")
     }
+    
+    static func error(_ message: String) {
+        print("[Zarli Error] \(message)")
+    }
+    #else
+    // In release builds, these become no-ops and get optimized away completely
+    @inlinable static func debug(_ message: String) {}
+    @inlinable static func warning(_ message: String) {}
+    @inlinable static func error(_ message: String) {}
+    #endif
 }

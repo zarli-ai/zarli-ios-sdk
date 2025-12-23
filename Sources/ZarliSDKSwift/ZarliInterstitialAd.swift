@@ -1,6 +1,9 @@
 import Foundation
 import UIKit
+
+#if canImport(AdSupport)
 import AdSupport
+#endif
 
 public protocol ZarliInterstitialAdDelegate: AnyObject {
     /// Called when the ad is loaded and ready to be shown.
@@ -22,7 +25,7 @@ public class ZarliInterstitialAd {
     /// Returns true if the ad has been loaded and is ready to show
     public private(set) var isReady: Bool = false
     
-    private var webViewController: ZarliWebViewController?
+    private weak var webViewController: ZarliWebViewController?
     private var bidId: String?
     private var admURL: URL?
     private var billingURL: URL?
@@ -101,7 +104,14 @@ public class ZarliInterstitialAd {
         
         // Basic Device Info
         let device = UIDevice.current
-        let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+        
+        // Get IDFA if AdSupport is available, otherwise use a fallback identifier
+        let idfa: String
+        #if canImport(AdSupport)
+        idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+        #else
+        idfa = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        #endif
         
         let deviceInfo = DeviceInfo(
             ifa: idfa,
@@ -120,7 +130,6 @@ public class ZarliInterstitialAd {
         
         let imp = Impression(
             id: "1",
-            banner: nil,
             interstitial: Interstitial()
         )
         
@@ -211,7 +220,6 @@ extension ZarliInterstitialAd: ZarliWebViewControllerDelegate {
         controller.dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
             self.delegate?.adDidDismiss(self)
-            self.webViewController = nil
         }
     }
     
