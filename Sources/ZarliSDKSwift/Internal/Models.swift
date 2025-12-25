@@ -28,6 +28,7 @@ struct Impression: Codable {
     let id: String
     let interstitial: Interstitial?
     let rewarded: Rewarded?
+    let bidfloor: Double?
 }
 
 struct Interstitial: Codable {}

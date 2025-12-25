@@ -31,6 +31,9 @@ public class ZarliRewardedAd {
     public weak var delegate: ZarliRewardedAdDelegate?
     public let adUnitId: String
     
+    /// Minimum eCPM floor for this ad request (set by AdMob mediation waterfall)
+    public var bidFloor: Double = 0.0
+    
     /// Returns true if the ad has been loaded and is ready to show
     public private(set) var isReady: Bool = false
     
@@ -140,7 +143,8 @@ public class ZarliRewardedAd {
         let imp = Impression(
             id: "1",
             interstitial: nil,
-            rewarded: Rewarded()
+            rewarded: Rewarded(),
+            bidfloor: self.bidFloor > 0 ? self.bidFloor : nil
         )
         
         return BidRequest(id: requestId, app: appInfo, device: deviceInfo, imp: [imp])

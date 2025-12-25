@@ -18,9 +18,13 @@ public class ZarliAdMobMediationInterstitialAd: NSObject, GADMediationInterstiti
         // The optional parameter from AdMob UI is typically the ad unit ID
         let adUnitId = adConfiguration.credentials.settings["parameter"] as? String ?? "default-interstitial"
         
-        // Or if passed via extra options
+        // Extract bid floor from AdMob watermark
+        // AdMob passes the floor price in cents (e.g., 1000 = $10.00)
+        let floorCents = adConfiguration.watermark?.intValue ?? 0
+        let floorDollars = Double(floorCents) / 100.0
         
         zarliAd = ZarliInterstitialAd(adUnitId: adUnitId)
+        zarliAd?.bidFloor = floorDollars  // Set the floor from AdMob waterfall
         zarliAd?.delegate = self
         zarliAd?.load()
     }
