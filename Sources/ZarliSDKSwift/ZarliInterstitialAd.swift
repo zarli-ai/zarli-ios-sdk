@@ -130,7 +130,8 @@ public class ZarliInterstitialAd {
         
         let imp = Impression(
             id: "1",
-            interstitial: Interstitial()
+            interstitial: Interstitial(),
+            rewarded: nil
         )
         
         return BidRequest(id: requestId, app: appInfo, device: deviceInfo, imp: [imp])
