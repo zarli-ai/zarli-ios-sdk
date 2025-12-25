@@ -17,7 +17,13 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
     public func loadAd() {
         let adUnitId = adConfiguration.credentials.settings["parameter"] as? String ?? "default-rewarded"
         
+        // Extract bid floor from AdMob watermark
+        // AdMob passes the floor price in cents (e.g., 1000 = $10.00)
+        let floorCents = adConfiguration.watermark?.intValue ?? 0
+        let floorDollars = Double(floorCents) / 100.0
+        
         zarliAd = ZarliRewardedAd(adUnitId: adUnitId)
+        zarliAd?.bidFloor = floorDollars  // Set the floor from AdMob waterfall
         zarliAd?.delegate = self
         zarliAd?.load()
     }
