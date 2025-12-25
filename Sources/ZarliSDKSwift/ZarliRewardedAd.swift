@@ -31,7 +31,7 @@ public class ZarliRewardedAd {
     public weak var delegate: ZarliRewardedAdDelegate?
     public let adUnitId: String
     
-    /// Minimum eCPM floor for this ad request (set by AdMob mediation waterfall)
+    /// Minimum eCPM floor for this ad request.
     public var bidFloor: Double = 0.0
     
     /// Returns true if the ad has been loaded and is ready to show
