@@ -13,6 +13,12 @@ let package = Package(
         .library(
             name: "ZarliSDKSwift",
             targets: ["ZarliSDKSwift"]),
+        .library(
+            name: "ZarliAdapterAdMob",
+            targets: ["ZarliAdapterAdMob"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.13.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -32,5 +38,12 @@ let package = Package(
         .testTarget(
             name: "ZarliSDKSwiftTests",
             dependencies: ["ZarliSDKSwift"]),
+        .target(
+            name: "ZarliAdapterAdMob",
+            dependencies: [
+                "ZarliSDKSwift",
+                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads")
+            ]
+        ),
     ]
 )

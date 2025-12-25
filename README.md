@@ -39,7 +39,7 @@ To ensure full functionality and compliance, add the following keys to your `Inf
    ```xml
    <key>NSAppTransportSecurity</key>
    <dict>
-       <key>NSAllowsArbitraryLoads</key>
+       <key>NSAllowsArbitraryLoadsInWebContent</key>
        <true/>
    </dict>
    ```
@@ -50,6 +50,21 @@ To ensure full functionality and compliance, add the following keys to your `Inf
    <key>NSUserTrackingUsageDescription</key>
    <string>This identifier will be used to deliver personalized ads to you.</string>
    ```
+
+## AdMob Mediation
+
+To use Zarli with AdMob mediation, you must import the `ZarliAdapterAdMob` library.
+
+### Swift Package Manager
+
+Add the following to your target dependencies in `Package.swift` or Xcode:
+
+- `ZarliAdapterAdMob`
+
+### AdMob UI Configuration
+
+1. **Class Name**: `ZarliAdapterAdMob.ZarliAdMobMediationAdapter`
+2. **Parameter**: Pass your Zarli Ad Unit ID string (optional override).
 
 ## Usage
 
@@ -133,6 +148,51 @@ class ViewController: UIViewController, ZarliInterstitialAdDelegate {
     
     func adDidClick(_ ad: ZarliInterstitialAd) {
         // User clicked the ad
+    }
+}
+```
+
+### 3. Load and Show a Rewarded Ad
+
+Implement `ZarliRewardedAdDelegate` to handle ad events and rewards:
+
+```swift
+import UIKit
+import ZarliSDKSwift
+
+class GameViewController: UIViewController, ZarliRewardedAdDelegate {
+    
+    var rewardedAd: ZarliRewardedAd?
+
+    func loadAd() {
+        rewardedAd = ZarliRewardedAd(adUnitId: "your-rewarded-ad-unit-id")
+        rewardedAd?.delegate = self
+        rewardedAd?.load()
+    }
+    
+    func showAd() {
+        if let ad = rewardedAd, ad.isReady {
+            ad.show()
+        }
+    }
+
+    // MARK: - ZarliRewardedAdDelegate
+    
+    func adDidLoad(_ ad: ZarliRewardedAd) {
+        print("Rewarded Ad Loaded")
+    }
+    
+    func ad(_ ad: ZarliRewardedAd, didFailToLoad error: Error) {
+        print("Failed to load: \(error)")
+    }
+    
+    func adDidShow(_ ad: ZarliRewardedAd) {}
+    func adDidDismiss(_ ad: ZarliRewardedAd) {}
+    func adDidClick(_ ad: ZarliRewardedAd) {}
+    
+    func ad(_ ad: ZarliRewardedAd, didEarnReward reward: ZarliReward) {
+        print("User earned reward: \(reward.amount) \(reward.type)")
+        // Grant reward to user
     }
 }
 ```

@@ -27,9 +27,12 @@ struct DeviceInfo: Codable {
 struct Impression: Codable {
     let id: String
     let interstitial: Interstitial?
+    let rewarded: Rewarded?
 }
 
 struct Interstitial: Codable {}
+
+struct Rewarded: Codable {}
 
 // MARK: - Bid Response
 
