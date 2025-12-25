@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-25
+### Added
+- Optional bid floor support for ad requests via `bidFloor` property on `ZarliInterstitialAd` and `ZarliRewardedAd`.
+- Automatic bid floor extraction from AdMob mediation watermark in `ZarliAdapterAdMob`.
+- Publishers can now set minimum eCPM thresholds for ad serving.
+
+### Changed
+- `Impression` model now includes optional `bidfloor` field (backward compatible).
+
+
 ## [1.1.2] - 2025-12-24
 ### Fixed
 - Fixed compilation error in `ZarliInterstitialAd.swift` due to missing `rewarded` parameter in `Impression` initialization.
