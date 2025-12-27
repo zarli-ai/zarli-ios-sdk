@@ -1,5 +1,5 @@
 import UIKit
-import ZarliSDK
+import ZarliSDKSwift
 
 class ViewController: UIViewController {
 

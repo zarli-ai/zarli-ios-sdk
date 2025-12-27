@@ -20,7 +20,7 @@ Scale ads with confidence. The SDK includes a `PrivacyInfo.xcprivacy` manifest t
 Import the SDK and load an ad using your Ad Unit ID.
 
 ```swift
-import ZarliSDK
+import ZarliSDKSwift
 
 // Load an interstitial ad
 ZarliInterstitialAd.load(adUnitId: "YOUR_AD_UNIT_ID") { result in
