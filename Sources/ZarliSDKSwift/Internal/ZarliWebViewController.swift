@@ -40,6 +40,7 @@ class ZarliWebViewController: UIViewController, WKScriptMessageHandler, WKNaviga
         webView.scrollView.isScrollEnabled = true
         webView.backgroundColor = .black
         webView.navigationDelegate = self
+        webView.allowsBackForwardNavigationGestures = true
         
         view.addSubview(webView)
     }
