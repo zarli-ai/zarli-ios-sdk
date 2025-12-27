@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ZarliSDKSwift'
-  s.version          = '1.0.1'
+  s.version          = '1.2.1'
   s.summary          = 'The official iOS SDK for the Zarli Ad Network.'
   s.description      = <<-DESC
     ZarliSDKSwift enables mobile publishers to seamlessly integrate high-performance, 
