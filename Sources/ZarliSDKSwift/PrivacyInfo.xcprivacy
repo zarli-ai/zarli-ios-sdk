@@ -4,6 +4,8 @@
 <dict>
     <key>NSPrivacyTracking</key>
     <true/>
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
     <key>NSPrivacyCollectedDataTypes</key>
     <array>
         <dict>
