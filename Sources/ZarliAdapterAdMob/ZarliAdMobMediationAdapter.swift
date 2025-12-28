@@ -5,6 +5,10 @@ import ZarliSDKSwift
 @objc(ZarliAdMobMediationAdapter)
 public class ZarliAdMobMediationAdapter: NSObject, GADMediationAdapter {
     
+    public required override init() {
+        super.init()
+    }
+    
     public static func adapterVersion() -> GADVersionNumber {
         let version = GADVersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
