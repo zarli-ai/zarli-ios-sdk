@@ -19,9 +19,8 @@ public class ZarliAdMobMediationInterstitialAd: NSObject, GADMediationInterstiti
         let adUnitId = adConfiguration.credentials.settings["parameter"] as? String ?? "default-interstitial"
         
         // Extract bid floor from AdMob watermark
-        // AdMob passes the floor price in cents (e.g., 1000 = $10.00)
-        let floorCents = adConfiguration.watermark?.intValue ?? 0
-        let floorDollars = Double(floorCents) / 100.0
+        // Note: AdMob watermark is opaque data. We currently only support explicit floor via 'parameter'.
+        let floorDollars = 0.0
         
         zarliAd = ZarliInterstitialAd(adUnitId: adUnitId)
         zarliAd?.bidFloor = floorDollars  // Set the floor from AdMob waterfall

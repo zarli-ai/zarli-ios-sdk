@@ -39,9 +39,8 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
         if let floor = explicitBidFloor {
             finalBidFloor = floor
         } else {
-             // AdMob passes the floor price in cents (e.g., 1000 = $10.00)
-            let floorCents = adConfiguration.watermark?.intValue ?? 0
-            finalBidFloor = Double(floorCents) / 100.0
+             // AdMob watermark is opaque. Default to 0.0 if no explicit floor is provided.
+            finalBidFloor = 0.0
         }
         
         zarliAd = ZarliRewardedAd(adUnitId: adUnitId)
