@@ -74,7 +74,8 @@ extension ZarliAdMobMediationRewardedAd: ZarliRewardedAdDelegate {
     }
     
     public func ad(_ ad: ZarliRewardedAd, didEarnReward reward: ZarliReward) {
-        let gadReward = GADAdReward(rewardType: reward.type, rewardAmount: NSDecimalNumber(value: reward.amount))
-        delegate?.didRewardUser(with: gadReward)
+        // GADMediationRewardedAdEventDelegate.didRewardUser() takes no arguments in newer SDKs
+        // The reward amount/type is configured in the AdMob UI for the ad unit.
+        delegate?.didRewardUser()
     }
 }
