@@ -22,7 +22,7 @@ let package = Package(
         // TODO: Replace 'url' and 'checksum' with your actual GitHub Release values.
         .binaryTarget(
             name: "ZarliSDKSwift",
-            url: "https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.0/ZarliSDKSwift.xcframework.zip",
+            url: "https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.1/ZarliSDKSwift.xcframework.zip",
             checksum: "4a8b4104b51e5471b8a90d2cf51311d000497a0922e7b2d14db9547960e26a4e" 
         ),
 
