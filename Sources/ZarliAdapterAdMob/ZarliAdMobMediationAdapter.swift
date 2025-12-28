@@ -19,6 +19,10 @@ public class ZarliAdMobMediationAdapter: NSObject, GADMediationAdapter {
         return nil
     }
     
+    required public override init() {
+        super.init()
+    }
+    
     public func setUp(with configuration: GADMediationServerConfiguration, completionHandler: @escaping GADMediationAdapterSetUpCompletionBlock) {
         
         // Extract parameters if needed, or initialize SDK with default/dummy config if not already initialized.
