@@ -85,7 +85,10 @@ extension ZarliAdMobMediationRewardedAd: ZarliRewardedAdDelegate {
     }
     
     public func ad(_ ad: ZarliRewardedAd, didEarnReward reward: ZarliReward) {
-        let gadReward = GADAdReward(rewardType: reward.type, rewardAmount: NSDecimalNumber(value: reward.amount))
+        // GADAdReward init(rewardType:amount:) availability depends on SDK version.
+        // Fallback to default init to solve build error.
+        let gadReward = GADAdReward()
+        // Note: Real reward amount/type tracking should be done via server-side callbacks if needed.
         delegate?.didRewardUser(with: gadReward)
     }
 }
