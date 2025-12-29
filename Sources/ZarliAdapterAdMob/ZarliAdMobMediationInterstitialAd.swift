@@ -15,15 +15,40 @@ public class ZarliAdMobMediationInterstitialAd: NSObject, GADMediationInterstiti
     }
     
     public func loadAd() {
-        // The optional parameter from AdMob UI is typically the ad unit ID
-        let adUnitId = adConfiguration.credentials.settings["parameter"] as? String ?? "default-interstitial"
+        print("ZarliAdapter: Interstitial loadAd() called")
+        var adUnitId = "default-interstitial"
+        var explicitBidFloor: Double?
         
-        // Extract bid floor from AdMob watermark
-        // Note: AdMob watermark is opaque data. We currently only support explicit floor via 'parameter'.
-        let floorDollars = 0.0
+        // 1. Parse 'parameter' string (supports JSON or raw string)
+        if let parameter = adConfiguration.credentials.settings["parameter"] as? String {
+             print("ZarliAdapter: Received parameter: \(parameter)")
+            if let data = parameter.data(using: .utf8),
+               let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                // Handle JSON format
+                if let unitId = json["adUnitId"] as? String {
+                    adUnitId = unitId
+                }
+                explicitBidFloor = json["bidFloor"] as? Double
+            } else {
+                // Fallback: Treat entire string as Ad Unit ID
+                adUnitId = parameter
+            }
+        } else {
+             print("ZarliAdapter: No parameter found")
+        }
+        
+        // 2. Determine Bid Floor
+        let finalBidFloor: Double
+        if let floor = explicitBidFloor {
+            finalBidFloor = floor
+        } else {
+            finalBidFloor = 0.0
+        }
+        
+        print("ZarliAdapter: Using AdUnitID: \(adUnitId), BidFloor: \(finalBidFloor)")
         
         zarliAd = ZarliInterstitialAd(adUnitId: adUnitId)
-        zarliAd?.bidFloor = floorDollars  // Set the floor from AdMob waterfall
+        zarliAd?.bidFloor = finalBidFloor
         zarliAd?.delegate = self
         zarliAd?.load()
     }

@@ -15,11 +15,13 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
     }
     
     public func loadAd() {
+        print("ZarliAdapter: Rewarded loadAd() called")
         var adUnitId = "default-rewarded"
         var explicitBidFloor: Double?
         
         // 1. Parse 'parameter' string (supports JSON or raw string)
         if let parameter = adConfiguration.credentials.settings["parameter"] as? String {
+            print("ZarliAdapter: Received parameter: \(parameter)")
             if let data = parameter.data(using: .utf8),
                let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 // Handle JSON format
@@ -31,17 +33,19 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
                 // Fallback: Treat entire string as Ad Unit ID
                 adUnitId = parameter
             }
+        } else {
+            print("ZarliAdapter: No parameter found")
         }
         
         // 2. Determine Bid Floor
-        // Priority: Explicit JSON param > AdMob Watermark > Default 0
         let finalBidFloor: Double
         if let floor = explicitBidFloor {
             finalBidFloor = floor
         } else {
-             // AdMob watermark is opaque. Default to 0.0 if no explicit floor is provided.
             finalBidFloor = 0.0
         }
+        
+        print("ZarliAdapter: Using AdUnitID: \(adUnitId), BidFloor: \(finalBidFloor)")
         
         zarliAd = ZarliRewardedAd(adUnitId: adUnitId)
         zarliAd?.bidFloor = finalBidFloor
@@ -51,9 +55,11 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
     
     public func present(from viewController: UIViewController) {
         if let ad = zarliAd, ad.isReady {
+            print("ZarliAdapter: Presenting Ad")
             ad.show(from: viewController)
         } else {
             let error = NSError(domain: "com.zarli.sdk", code: 0, userInfo: [NSLocalizedDescriptionKey: "Ad not ready"])
+            print("ZarliAdapter: Failed to present - Ad not ready")
             delegate?.didFailToPresentWithError(error)
         }
     }
@@ -61,10 +67,12 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
 
 extension ZarliAdMobMediationRewardedAd: ZarliRewardedAdDelegate {
     public func adDidLoad(_ ad: ZarliRewardedAd) {
+        print("ZarliAdapter: adDidLoad - Success")
         delegate = completionHandler?(self, nil)
     }
     
     public func ad(_ ad: ZarliRewardedAd, didFailToLoad error: Error) {
+        print("ZarliAdapter: didFailToLoad - Error: \(error.localizedDescription)")
         _ = completionHandler?(nil, error)
     }
     
@@ -85,7 +93,8 @@ extension ZarliAdMobMediationRewardedAd: ZarliRewardedAdDelegate {
     }
     
     public func ad(_ ad: ZarliRewardedAd, didEarnReward reward: ZarliReward) {
-        // Compiler indicates didRewardUser() takes no arguments in this context.
+        // GADMediationRewardedAdEventDelegate.didRewardUser() takes no arguments.
+        // It relies on the reward configured in the AdMob console.
         delegate?.didRewardUser()
     }
 }
