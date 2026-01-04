@@ -22,13 +22,26 @@ public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
         // 1. Parse 'parameter' string (supports JSON or raw string)
         if let parameter = adConfiguration.credentials.settings["parameter"] as? String {
             print("ZarliAdapter: Received parameter: \(parameter)")
-            if let data = parameter.data(using: .utf8),
-               let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+            
+            var json: [String: Any]?
+            if let data = parameter.data(using: .utf8) {
+                json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            }
+            
+            // Fallback: If not valid JSON but contains colons, try wrapping in braces
+            if json == nil && parameter.contains(":") {
+                let wrapped = "{" + parameter + "}"
+                if let data = wrapped.data(using: .utf8) {
+                    json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                }
+            }
+
+            if let finalJson = json {
                 // Handle JSON format
-                if let unitId = json["adUnitId"] as? String {
+                if let unitId = finalJson["adUnitId"] as? String {
                     adUnitId = unitId
                 }
-                explicitBidFloor = json["bidFloor"] as? Double
+                explicitBidFloor = finalJson["bidFloor"] as? Double
             } else {
                 // Fallback: Treat entire string as Ad Unit ID
                 adUnitId = parameter
