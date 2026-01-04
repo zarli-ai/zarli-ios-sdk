@@ -32,8 +32,7 @@ let package = Package(
             name: "ZarliAdapterAdMob",
             dependencies: [
                 "ZarliSDKSwift",
-                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads"),
-                .product(name: "ShopifyCheckoutSheetKit", package: "checkout-sheet-kit-swift")
+                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads")
             ]
         ),
     ]
