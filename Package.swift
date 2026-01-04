@@ -13,6 +13,9 @@ let package = Package(
         .library(
             name: "ZarliAdapterAdMob",
             targets: ["ZarliAdapterAdMob"]),
+        .library(
+            name: "ZarliShopifySupport",
+            targets: ["ZarliShopifySupport"]),
     ],
     dependencies: [
         .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.13.0"),
@@ -20,11 +23,10 @@ let package = Package(
     ],
     targets: [
         // 1. The Binary Core SDK
-        // TODO: Replace 'url' and 'checksum' with your actual GitHub Release values.
         .binaryTarget(
             name: "ZarliSDKSwift",
-            url: "https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.19/ZarliSDKSwift.xcframework.zip",
-            checksum: "c66643c8b121d7eee949489079cbb8821bf5a86b6f1498504a03ce39178d8c59"
+            url: "https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.20/ZarliSDKSwift.xcframework.zip",
+            checksum: "11a4713731dcf5358c3709d27e8051bfa79bdde905a8dacfc0390cec8db6ca6a"
         ),
 
         // 2. The Open-Source AdMob Adapter
@@ -33,6 +35,15 @@ let package = Package(
             dependencies: [
                 "ZarliSDKSwift",
                 .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads")
+            ]
+        ),
+
+        // 3. Shopify Support Module
+        .target(
+            name: "ZarliShopifySupport",
+            dependencies: [
+                "ZarliSDKSwift",
+                .product(name: "ShopifyCheckoutSheetKit", package: "checkout-sheet-kit-swift")
             ]
         ),
     ]
