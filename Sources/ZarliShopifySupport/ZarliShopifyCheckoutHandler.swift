@@ -19,7 +19,7 @@ public class ZarliShopifyCheckoutHandler: ZarliCheckoutHandler {
     // MARK: - ZarliCheckoutHandler
     
     public func present(checkout: URL, from viewController: UIViewController) {
-        ZarliLogger.debug("ZarliShopifySupport: Presenting Shopify Checkout")
+        print("[ZarliShopifySupport] Presenting Shopify Checkout")
         ShopifyCheckoutSheetKit.present(checkout: checkout, from: viewController)
     }
 }
