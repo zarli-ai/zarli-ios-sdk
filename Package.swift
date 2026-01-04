@@ -16,6 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.13.0"),
+        .package(url: "https://github.com/Shopify/checkout-sheet-kit-swift", from: "3.0.0"),
     ],
     targets: [
         // 1. The Binary Core SDK
@@ -31,7 +32,8 @@ let package = Package(
             name: "ZarliAdapterAdMob",
             dependencies: [
                 "ZarliSDKSwift",
-                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads")
+                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads"),
+                .product(name: "ShopifyCheckoutSheetKit", package: "checkout-sheet-kit-swift")
             ]
         ),
     ]

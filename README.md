@@ -37,7 +37,7 @@ To ensure full functionality and compliance, add the following keys to your `Inf
 2. **User Tracking Usage Description**: Required for requesting permission to track the user (IDFA access).
    ```xml
    <key>NSUserTrackingUsageDescription</key>
-   <string>This identifier will be used to deliver personalized ads to you.</string>
+   <string>This identifier will be used to deliver personalized content to you.</string>
    ```
 
 ## Usage
