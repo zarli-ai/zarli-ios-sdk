@@ -27,7 +27,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         super.init()
     }
     
-    public func setUp(with configuration: MediationServerConfiguration, completionHandler: @escaping GADMediationAdapterSetUpCompletionBlock) {
+    public func setUp(with configuration: GoogleMobileAds.MediationServerConfiguration, completionHandler: @escaping GoogleMobileAds.MediationAdapterSetUpCompletionBlock) {
         
         // In this simple implementation, we assume readiness or successful setup.
         // Initialize SDK
@@ -35,7 +35,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         completionHandler(nil)
     }
     
-    public func loadInterstitial(for adConfiguration: MediationInterstitialAdConfiguration, completionHandler: @escaping GADMediationInterstitialLoadCompletionHandler) {
+    public func loadInterstitial(for adConfiguration: GoogleMobileAds.MediationInterstitialAdConfiguration, completionHandler: @escaping GoogleMobileAds.MediationInterstitialLoadCompletionHandler) {
         // Ensure SDK is initialized
         ZarliAdMobMediationAdapter.initializeZarliSDK()
         
@@ -44,7 +44,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         ad.loadAd()
     }
     
-    public func loadRewardedAd(for adConfiguration: MediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
+    public func loadRewardedAd(for adConfiguration: GoogleMobileAds.MediationRewardedAdConfiguration, completionHandler: @escaping GoogleMobileAds.MediationRewardedLoadCompletionHandler) {
         // Ensure SDK is initialized
         ZarliAdMobMediationAdapter.initializeZarliSDK()
         
