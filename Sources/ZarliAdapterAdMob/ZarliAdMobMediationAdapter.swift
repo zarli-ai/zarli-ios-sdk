@@ -35,7 +35,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         completionHandler(nil)
     }
     
-    public func loadInterstitial(for adConfiguration: MediationInterstitialAdConfiguration, completionHandler: @escaping MediationInterstitialLoadCompletionHandler) {
+    public func loadInterstitial(for adConfiguration: MediationInterstitialAdConfiguration, completionHandler: @escaping GADMediationInterstitialLoadCompletionHandler) {
         // Ensure SDK is initialized
         ZarliAdMobMediationAdapter.initializeZarliSDK()
         
@@ -44,7 +44,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         ad.loadAd()
     }
     
-    public func loadRewardedAd(for adConfiguration: MediationRewardedAdConfiguration, completionHandler: @escaping MediationRewardedLoadCompletionHandler) {
+    public func loadRewardedAd(for adConfiguration: MediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
         // Ensure SDK is initialized
         ZarliAdMobMediationAdapter.initializeZarliSDK()
         
