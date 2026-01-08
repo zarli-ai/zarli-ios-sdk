@@ -2,14 +2,14 @@ import Foundation
 import GoogleMobileAds
 import ZarliSDKSwift
 
-public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
+public class ZarliAdMobMediationRewardedAd: NSObject, MediationRewardedAd {
     
-    private let adConfiguration: GADMediationRewardedAdConfiguration
-    private var completionHandler: GADMediationRewardedLoadCompletionHandler?
-    private weak var delegate: GADMediationRewardedAdEventDelegate?
+    private let adConfiguration: MediationRewardedAdConfiguration
+    private var completionHandler: MediationRewardedLoadCompletionHandler?
+    private weak var delegate: MediationRewardedAdEventDelegate?
     private var zarliAd: ZarliRewardedAd?
     
-    public init(configuration: GADMediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
+    public init(configuration: MediationRewardedAdConfiguration, completionHandler: @escaping MediationRewardedLoadCompletionHandler) {
         self.adConfiguration = configuration
         self.completionHandler = completionHandler
     }
@@ -106,7 +106,7 @@ extension ZarliAdMobMediationRewardedAd: ZarliRewardedAdDelegate {
     }
     
     public func ad(_ ad: ZarliRewardedAd, didEarnReward reward: ZarliReward) {
-        // GADMediationRewardedAdEventDelegate.didRewardUser() takes no arguments.
+        // MediationRewardedAdEventDelegate.didRewardUser() takes no arguments.
         // It relies on the reward configured in the AdMob console.
         delegate?.didRewardUser()
     }
