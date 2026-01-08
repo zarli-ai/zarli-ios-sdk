@@ -9,13 +9,13 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
     private var interstitialAd: ZarliAdMobMediationInterstitialAd?
     private var rewardedAd: ZarliAdMobMediationRewardedAd?
     
-    public static func adapterVersion() -> VersionNumber {
-        let version = VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
+    public static func adapterVersion() -> GoogleMobileAds.VersionNumber {
+        let version = GoogleMobileAds.VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
     }
     
-    public static func adSDKVersion() -> VersionNumber {
-        let version = VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
+    public static func adSDKVersion() -> GoogleMobileAds.VersionNumber {
+        let version = GoogleMobileAds.VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
     }
     
