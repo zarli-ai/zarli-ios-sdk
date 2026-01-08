@@ -9,17 +9,17 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
     private var interstitialAd: ZarliAdMobMediationInterstitialAd?
     private var rewardedAd: ZarliAdMobMediationRewardedAd?
     
-    public static func adapterVersion() -> GADVersionNumber {
-        let version = GADVersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
+    public static func adapterVersion() -> VersionNumber {
+        let version = VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
     }
     
-    public static func adSDKVersion() -> GADVersionNumber {
-        let version = GADVersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
+    public static func adSDKVersion() -> VersionNumber {
+        let version = VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
     }
     
-    public static func networkExtrasClass() -> GADAdNetworkExtras.Type? {
+    public static func networkExtrasClass() -> AdNetworkExtras.Type? {
         return nil
     }
     
@@ -27,7 +27,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         super.init()
     }
     
-    public func setUp(with configuration: MediationServerConfiguration, completionHandler: @escaping MediationAdapterSetUpCompletionBlock) {
+    public func setUp(with configuration: MediationServerConfiguration, completionHandler: @escaping GADMediationAdapterSetUpCompletionBlock) {
         
         // In this simple implementation, we assume readiness or successful setup.
         // Initialize SDK
