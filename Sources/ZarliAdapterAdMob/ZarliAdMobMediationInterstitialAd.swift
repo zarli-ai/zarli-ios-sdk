@@ -2,14 +2,15 @@ import Foundation
 import GoogleMobileAds
 import ZarliSDKSwift
 
-public class ZarliAdMobMediationInterstitialAd: NSObject, GoogleMobileAds.MediationInterstitialAd {
+@objc(ZarliAdMobMediationInterstitialAd)
+public class ZarliAdMobMediationInterstitialAd: NSObject, GADMediationInterstitialAd {
     
-    private let adConfiguration: GoogleMobileAds.MediationInterstitialAdConfiguration
-    private var completionHandler: GoogleMobileAds.MediationInterstitialLoadCompletionHandler?
-    private weak var delegate: GoogleMobileAds.MediationInterstitialAdEventDelegate?
+    private let adConfiguration: GADMediationInterstitialAdConfiguration
+    private var completionHandler: GADMediationInterstitialLoadCompletionHandler?
+    private weak var delegate: GADMediationInterstitialAdEventDelegate?
     private var zarliAd: ZarliInterstitialAd?
     
-    public init(configuration: GoogleMobileAds.MediationInterstitialAdConfiguration, completionHandler: @escaping GoogleMobileAds.MediationInterstitialLoadCompletionHandler) {
+    public init(configuration: GADMediationInterstitialAdConfiguration, completionHandler: @escaping GADMediationInterstitialLoadCompletionHandler) {
         self.adConfiguration = configuration
         self.completionHandler = completionHandler
     }

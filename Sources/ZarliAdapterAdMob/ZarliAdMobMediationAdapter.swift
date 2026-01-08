@@ -9,13 +9,13 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
     private var interstitialAd: ZarliAdMobMediationInterstitialAd?
     private var rewardedAd: ZarliAdMobMediationRewardedAd?
     
-    public static func adapterVersion() -> GoogleMobileAds.VersionNumber {
-        let version = GoogleMobileAds.VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
+    public static func adapterVersion() -> GADVersionNumber {
+        let version = GADVersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
     }
     
-    public static func adSDKVersion() -> GoogleMobileAds.VersionNumber {
-        let version = GoogleMobileAds.VersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
+    public static func adSDKVersion() -> GADVersionNumber {
+        let version = GADVersionNumber(majorVersion: 1, minorVersion: 0, patchVersion: 0)
         return version
     }
     
@@ -27,7 +27,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         super.init()
     }
     
-    public func setUp(with configuration: GoogleMobileAds.MediationServerConfiguration, completionHandler: @escaping GoogleMobileAds.MediationAdapterSetUpCompletionBlock) {
+    public func setUp(with configuration: GADMediationServerConfiguration, completionHandler: @escaping GADMediationAdapterSetUpCompletionBlock) {
         
         // In this simple implementation, we assume readiness or successful setup.
         // Initialize SDK
@@ -35,7 +35,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         completionHandler(nil)
     }
     
-    public func loadInterstitial(for adConfiguration: GoogleMobileAds.MediationInterstitialAdConfiguration, completionHandler: @escaping GoogleMobileAds.MediationInterstitialLoadCompletionHandler) {
+    public func loadInterstitial(for adConfiguration: GADMediationInterstitialAdConfiguration, completionHandler: @escaping GADMediationInterstitialLoadCompletionHandler) {
         // Ensure SDK is initialized
         ZarliAdMobMediationAdapter.initializeZarliSDK()
         
@@ -44,7 +44,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         ad.loadAd()
     }
     
-    public func loadRewardedAd(for adConfiguration: GoogleMobileAds.MediationRewardedAdConfiguration, completionHandler: @escaping GoogleMobileAds.MediationRewardedLoadCompletionHandler) {
+    public func loadRewardedAd(for adConfiguration: GADMediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
         // Ensure SDK is initialized
         ZarliAdMobMediationAdapter.initializeZarliSDK()
         

@@ -2,14 +2,15 @@ import Foundation
 import GoogleMobileAds
 import ZarliSDKSwift
 
-public class ZarliAdMobMediationRewardedAd: NSObject, GoogleMobileAds.MediationRewardedAd {
+@objc(ZarliAdMobMediationRewardedAd)
+public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
     
-    private let adConfiguration: GoogleMobileAds.MediationRewardedAdConfiguration
-    private var completionHandler: GoogleMobileAds.MediationRewardedLoadCompletionHandler?
-    private weak var delegate: GoogleMobileAds.MediationRewardedAdEventDelegate?
+    private let adConfiguration: GADMediationRewardedAdConfiguration
+    private var completionHandler: GADMediationRewardedLoadCompletionHandler?
+    private weak var delegate: GADMediationRewardedAdEventDelegate?
     private var zarliAd: ZarliRewardedAd?
     
-    public init(configuration: GoogleMobileAds.MediationRewardedAdConfiguration, completionHandler: @escaping GoogleMobileAds.MediationRewardedLoadCompletionHandler) {
+    public init(configuration: GADMediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
         self.adConfiguration = configuration
         self.completionHandler = completionHandler
     }
