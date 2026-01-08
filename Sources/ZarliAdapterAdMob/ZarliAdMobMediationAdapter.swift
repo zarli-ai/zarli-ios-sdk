@@ -3,7 +3,7 @@ import GoogleMobileAds
 import ZarliSDKSwift
 
 @objc(ZarliAdMobMediationAdapter)
-public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
+public class ZarliAdMobMediationAdapter: NSObject, GADMediationAdapter {
     
     // Properties to retain the ads during the loading process
     private var interstitialAd: ZarliAdMobMediationInterstitialAd?
@@ -19,7 +19,7 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         return version
     }
     
-    public static func networkExtrasClass() -> AdNetworkExtras.Type? {
+    public static func networkExtrasClass() -> GADAdNetworkExtras.Type? {
         return nil
     }
     
