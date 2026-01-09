@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
 
   s.homepage         = 'https://github.com/zarli-ai/zarli-ios-sdk'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Zarli AI' => 'support@zarli.ai' }
+  s.author           = { 'Zarli AI' => 'founders@zarli.ai' }
   
   # For binary distribution, typically check the zip from releases
   # Update the http URL to your release zip
