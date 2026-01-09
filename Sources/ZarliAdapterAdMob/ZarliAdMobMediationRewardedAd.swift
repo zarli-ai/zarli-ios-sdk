@@ -5,11 +5,11 @@ import ZarliSDKSwift
 public class ZarliAdMobMediationRewardedAd: NSObject, MediationRewardedAd {
     
     private let adConfiguration: MediationRewardedAdConfiguration
-    private var completionHandler: MediationRewardedLoadCompletionHandler?
+    private var completionHandler: GADMediationRewardedLoadCompletionHandler?
     private weak var delegate: MediationRewardedAdEventDelegate?
     private var zarliAd: ZarliRewardedAd?
     
-    public init(configuration: MediationRewardedAdConfiguration, completionHandler: @escaping MediationRewardedLoadCompletionHandler) {
+    public init(configuration: MediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
         self.adConfiguration = configuration
         self.completionHandler = completionHandler
     }

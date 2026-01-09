@@ -5,11 +5,11 @@ import ZarliSDKSwift
 public class ZarliAdMobMediationInterstitialAd: NSObject, MediationInterstitialAd {
     
     private let adConfiguration: MediationInterstitialAdConfiguration
-    private var completionHandler: MediationInterstitialLoadCompletionHandler?
+    private var completionHandler: GADMediationInterstitialLoadCompletionHandler?
     private weak var delegate: MediationInterstitialAdEventDelegate?
     private var zarliAd: ZarliInterstitialAd?
     
-    public init(configuration: MediationInterstitialAdConfiguration, completionHandler: @escaping MediationInterstitialLoadCompletionHandler) {
+    public init(configuration: MediationInterstitialAdConfiguration, completionHandler: @escaping GADMediationInterstitialLoadCompletionHandler) {
         self.adConfiguration = configuration
         self.completionHandler = completionHandler
     }

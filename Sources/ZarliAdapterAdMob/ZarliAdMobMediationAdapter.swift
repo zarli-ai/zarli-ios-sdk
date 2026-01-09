@@ -27,19 +27,19 @@ public class ZarliAdMobMediationAdapter: NSObject, MediationAdapter {
         super.init()
     }
     
-    public func setUp(with configuration: MediationServerConfiguration, completionHandler: @escaping MediationAdapterSetUpCompletionBlock) {
+    public func setUp(with configuration: MediationServerConfiguration, completionHandler: @escaping GADMediationAdapterSetUpCompletionBlock) {
         
         // In this simple implementation, we assume readiness or successful setup.
         completionHandler(nil)
     }
     
-    public func loadInterstitial(for adConfiguration: MediationInterstitialAdConfiguration, completionHandler: @escaping MediationInterstitialLoadCompletionHandler) {
+    public func loadInterstitial(for adConfiguration: MediationInterstitialAdConfiguration, completionHandler: @escaping GADMediationInterstitialLoadCompletionHandler) {
         let ad = ZarliAdMobMediationInterstitialAd(configuration: adConfiguration, completionHandler: completionHandler)
         self.interstitialAd = ad // Retain
         ad.loadAd()
     }
     
-    public func loadRewardedAd(for adConfiguration: MediationRewardedAdConfiguration, completionHandler: @escaping MediationRewardedLoadCompletionHandler) {
+    public func loadRewardedAd(for adConfiguration: MediationRewardedAdConfiguration, completionHandler: @escaping GADMediationRewardedLoadCompletionHandler) {
         let ad = ZarliAdMobMediationRewardedAd(configuration: adConfiguration, completionHandler: completionHandler)
         self.rewardedAd = ad // Retain
         ad.loadAd()
