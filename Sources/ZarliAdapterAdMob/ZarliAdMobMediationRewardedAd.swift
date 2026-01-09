@@ -2,7 +2,6 @@ import Foundation
 import GoogleMobileAds
 import ZarliSDKSwift
 
-@objc(ZarliAdMobMediationRewardedAd)
 public class ZarliAdMobMediationRewardedAd: NSObject, GADMediationRewardedAd {
     
     private let adConfiguration: GADMediationRewardedAdConfiguration
@@ -107,7 +106,7 @@ extension ZarliAdMobMediationRewardedAd: ZarliRewardedAdDelegate {
     }
     
     public func ad(_ ad: ZarliRewardedAd, didEarnReward reward: ZarliReward) {
-        // MediationRewardedAdEventDelegate.didRewardUser() takes no arguments.
+        // GADMediationRewardedAdEventDelegate.didRewardUser() takes no arguments.
         // It relies on the reward configured in the AdMob console.
         delegate?.didRewardUser()
     }

@@ -2,7 +2,6 @@ import Foundation
 import GoogleMobileAds
 import ZarliSDKSwift
 
-@objc(ZarliAdMobMediationInterstitialAd)
 public class ZarliAdMobMediationInterstitialAd: NSObject, GADMediationInterstitialAd {
     
     private let adConfiguration: GADMediationInterstitialAdConfiguration
