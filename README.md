@@ -10,11 +10,113 @@ The official iOS SDK for the Zarli Ad Network. Enables mobile publishers to seam
 
 ## Installation
 
-### Swift Package Manager
+Zarli iOS SDK supports both **Swift Package Manager (SPM)** and **CocoaPods**. Choose the method that best fits your project.
+
+### Choosing Your Installation Method
+
+| Method | Best For | Requirements | Status |
+|--------|----------|--------------|--------|
+| **Swift Package Manager** | New projects, future-proofing | Xcode 14.0+, iOS 13.0+ | ✅ Recommended |
+| **CocoaPods** | Existing CocoaPods projects | CocoaPods 1.10+ | ✅ Supported (until Dec 2026) |
+
+> [!TIP]
+> **For new projects**, we recommend Swift Package Manager as Apple's native dependency manager. CocoaPods will become read-only in December 2026.
+
+---
+
+### Swift Package Manager (Recommended)
+
+#### Installing Core SDK
 
 1. In Xcode, navigate to **File > Add Package Dependencies...**
-2. Paste the repository URL: `https://github.com/zarli-ai/zarli-ios-sdk.git`
-3. Select the `ZarliSDKSwift` library and add it to your target
+2. Paste the repository URL:
+   ```
+   https://github.com/zarli-ai/zarli-ios-sdk.git
+   ```
+3. Select version rule (e.g., "Up to Next Major Version" with `1.3.33`)
+4. Select the **`ZarliSDKSwift`** library
+5. Click **Add Package**
+
+#### Installing with AdMob Mediation
+
+If you're using AdMob mediation, also add the adapter:
+
+1. After adding the package, select **`ZarliAdapterAdMob`** library in addition to `ZarliSDKSwift`
+2. The adapter will automatically include Google Mobile Ads SDK as a dependency
+
+**Package Products:**
+- `ZarliSDKSwift` - Core SDK (required)
+- `ZarliAdapterAdMob` - AdMob mediation adapter (optional)
+- `ZarliShopifySupport` - Shopify integration (optional)
+
+---
+
+### CocoaPods
+
+Add to your `Podfile`:
+
+```ruby
+# Core SDK only
+pod 'ZarliSDKSwift', '~> 1.3'
+
+# With AdMob Mediation
+pod 'ZarliAdapterAdMob', '~> 1.3'
+```
+
+Then run:
+```bash
+pod install
+```
+
+---
+
+### Flutter Integration
+
+#### For Flutter 3.24+ (Recommended: SPM)
+
+Flutter 3.24+ supports Swift Package Manager natively. This is the recommended approach for new Flutter projects.
+
+1. **Enable SPM in Flutter:**
+   ```bash
+   flutter config --enable-swift-package-manager
+   ```
+
+2. **Add the Zarli Flutter plugin** to `pubspec.yaml`:
+   ```yaml
+   dependencies:
+     zarli_flutter: ^0.0.1
+   ```
+
+3. **Add native iOS dependencies via SPM:**
+   - Open `ios/Runner.xcworkspace` in Xcode
+   - Navigate to **File > Add Package Dependencies...**
+   - Add `https://github.com/zarli-ai/zarli-ios-sdk.git`
+   - Select `ZarliAdapterAdMob` library
+
+4. **Run your Flutter app:**
+   ```bash
+   flutter pub get
+   flutter run
+   ```
+
+#### For Flutter < 3.24 (CocoaPods)
+
+The Zarli Flutter plugin automatically includes CocoaPods dependencies. Simply add to `pubspec.yaml`:
+
+```yaml
+dependencies:
+  zarli_flutter: ^0.0.1
+```
+
+Then run:
+```bash
+flutter pub get
+cd ios && pod install && cd ..
+flutter run
+```
+
+> [!NOTE]
+> The Flutter plugin's podspec automatically declares the dependency on `ZarliAdapterAdMob`, so you don't need to modify your Podfile manually.
 
 ## Privacy & Compliance
 
@@ -167,12 +269,91 @@ class GameViewController: UIViewController, ZarliRewardedAdDelegate {
 
 ## AdMob Mediation
 
-To use Zarli with AdMob mediation, include the `ZarliAdapterAdMob` library provided in this package.
+Zarli integrates seamlessly with Google AdMob as a custom mediation adapter. This allows you to serve Zarli ads through your existing AdMob waterfall.
 
-1.  Add `ZarliAdapterAdMob` to your target dependencies.
-2.  Configure Custom Event in AdMob UI:
-    *   **Class Name**: `ZarliAdapterAdMob.ZarliAdMobMediationAdapter`
-    *   **Parameter**: Pass your Zarli Ad Unit ID string.
+### Installation
+
+Choose the method that matches your project setup:
+
+#### Swift Package Manager
+
+If you installed via SPM, ensure you've added the **`ZarliAdapterAdMob`** library:
+
+1. In Xcode, go to your project settings
+2. Select your app target > **General** > **Frameworks, Libraries, and Embedded Content**
+3. Verify `ZarliAdapterAdMob` is listed
+4. If not, add the package again and select `ZarliAdapterAdMob` library
+
+The adapter automatically includes:
+- `ZarliSDKSwift` (Core SDK)
+- `GoogleMobileAds` (AdMob SDK v11.0+)
+
+#### CocoaPods
+
+Add to your `Podfile`:
+
+```ruby
+pod 'ZarliAdapterAdMob', '~> 1.3'
+```
+
+Then run:
+```bash
+pod install
+```
+
+### AdMob Dashboard Configuration
+
+1. **Log in to AdMob Console**: [https://apps.admob.com](https://apps.admob.com)
+
+2. **Create a Mediation Group** (or edit existing):
+   - Navigate to **Mediation** > **Create Mediation Group**
+   - Select your ad format (Interstitial or Rewarded)
+   - Select your ad unit
+
+3. **Add Custom Event**:
+   - Click **Add Custom Event**
+   - **Class Name**: `ZarliAdapterAdMob.ZarliAdMobMediationAdapter`
+   - **Parameter**: Your Zarli Ad Unit ID (e.g., `"your-zarli-ad-unit-id"`)
+
+4. **Set eCPM** for waterfall positioning
+
+5. **Save** the mediation group
+
+### Code Implementation
+
+Initialize the Zarli SDK in your `AppDelegate`:
+
+```swift
+import ZarliSDKSwift
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    // Initialize Zarli SDK
+    let config = ZarliConfiguration(apiKey: "YOUR_ZARLI_API_KEY")
+    ZarliSDK.shared.initialize(configuration: config) { success in
+        print("Zarli SDK initialized: \(success)")
+    }
+    
+    // Initialize AdMob
+    GADMobileAds.sharedInstance().start(completionHandler: nil)
+    
+    return true
+}
+```
+
+Then use AdMob's standard APIs to load and show ads. The adapter will automatically serve Zarli ads when selected by the mediation waterfall.
+
+### Troubleshooting
+
+**Adapter not found:**
+- Verify `ZarliAdapterAdMob` is added to your target
+- Clean build folder (Cmd+Shift+K) and rebuild
+- For SPM: Check Package Dependencies in Xcode project settings
+
+**Ads not serving:**
+- Verify Zarli SDK is initialized before AdMob requests ads
+- Check AdMob mediation waterfall eCPM settings
+- Verify Zarli Ad Unit ID is correct in AdMob custom event parameter
+- Enable debug mode: `ZarliConfiguration(apiKey: "...", isDebugMode: true)`
 
 ## Author
 Zarli AI
