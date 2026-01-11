@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ZarliSDKSwift'
-  s.version          = '1.3.34'
+  s.version          = '1.3.35'
   s.summary          = 'The official iOS SDK for the Zarli Ad Network.'
   s.description      = <<-DESC
     ZarliSDKSwift enables mobile publishers to seamlessly integrate high-performance, 
@@ -10,14 +10,21 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/zarli-ai/zarli-ios-sdk'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Zarli AI' => 'founders@zarli.ai' }
-  
-  # For binary distribution, typically check the zip from releases
-  # Update the http URL to your release zip
-  s.source           = { :http => 'https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.34/ZarliSDKSwift.xcframework.zip' }
+  s.source           = { :http => 'https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.35/ZarliSDKSwift.xcframework.zip' }
 
   s.ios.deployment_target = '13.0'
   s.swift_version = '5.0'
 
-  # Use the vendored framework
-  s.vendored_frameworks = 'ZarliSDKSwift.xcframework'
+  s.source_files = 'Sources/ZarliSDKSwift/**/*.swift'
+  
+  # Include the Privacy Manifest
+  s.resource_bundles = {
+    'ZarliSDKSwift_Privacy' => ['Sources/ZarliSDKSwift/PrivacyInfo.xcprivacy']
+  }
+  
+  # Enable Objective-C interoperability
+  s.pod_target_xcconfig = { 
+    'SWIFT_OBJC_INTERFACE_HEADER_NAME' => 'ZarliSDKSwift-Swift.h',
+    'DEFINES_MODULE' => 'YES'
+  }
 end
