@@ -1,5 +1,5 @@
 #import "ZarliAdMobMediationRewardedAd.h"
-#import <ZarliSDKSwift/ZarliSDKSwift-Swift.h>
+@import ZarliSDKSwift;
 
 @interface ZarliAdMobMediationRewardedAd () <ZarliRewardedAdDelegate>
 @end

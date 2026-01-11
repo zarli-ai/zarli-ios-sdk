@@ -1,7 +1,7 @@
 #import "ZarliAdMobMediationAdapter.h"
 #import "ZarliAdMobMediationInterstitialAd.h"
 #import "ZarliAdMobMediationRewardedAd.h"
-#import <ZarliSDKSwift/ZarliSDKSwift-Swift.h>
+@import ZarliSDKSwift;
 
 @implementation ZarliAdMobMediationAdapter {
   ZarliAdMobMediationInterstitialAd *_interstitialAd;

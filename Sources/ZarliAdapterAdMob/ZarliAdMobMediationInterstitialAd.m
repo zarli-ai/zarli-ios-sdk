@@ -1,5 +1,5 @@
 #import "ZarliAdMobMediationInterstitialAd.h"
-#import <ZarliSDKSwift/ZarliSDKSwift-Swift.h>
+@import ZarliSDKSwift;
 
 @interface ZarliAdMobMediationInterstitialAd () <ZarliInterstitialAdDelegate>
 @end
