@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ZarliAdapterAdMob'
-  s.version          = '1.3.50'
+  s.version          = '1.3.51'
   s.summary          = 'AdMob Mediation Adapter for Zarli iOS SDK.'
   s.description      = <<-DESC
     Enables publishers to monetize with Zarli playable ads via Google Mobile Ads (AdMob) Mediation.
