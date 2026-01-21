@@ -25,6 +25,7 @@
 }
 
 - (void)loadAd {
+  NSLog(@"[ZarliAdapter] loadAd called in ZarliAdMobMediationRewardedAd");
   NSString *adUnitId = @"default-rewarded";
   double bidFloor = 0.0;
 

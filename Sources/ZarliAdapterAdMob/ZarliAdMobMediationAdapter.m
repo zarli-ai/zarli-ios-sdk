@@ -49,6 +49,14 @@
 
 #pragma mark - Rewarded Ad Loading
 
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    NSLog(@"[ZarliAdapter] ZarliAdMobMediationAdapter initialized");
+  }
+  return self;
+}
+
 - (void)loadRewardedAdForAdConfiguration:
             (GADMediationRewardedAdConfiguration *)adConfiguration
                        completionHandler:
