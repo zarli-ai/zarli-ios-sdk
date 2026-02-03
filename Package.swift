@@ -26,7 +26,7 @@ let package = Package(
         .binaryTarget(
             name: "ZarliSDKSwift",
             url: "https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.61/ZarliSDKSwift.xcframework.zip",
-            checksum: "71156d26833ba2797a8041dbe883d57c228e5743635418f16e3d9161b06bdaed"
+            checksum: "082bee53de6ea0c1e8ca337d99fca44164f1d14ee2bb85d753c07dc3018e1d43"
         ),
 
         // 2. The Open-Source AdMob Adapter
