@@ -1,4 +1,5 @@
 #import "ZarliAdMobMediationInterstitialAd.h"
+#import "ZarliAdMobMediationAdapter.h"
 @import ZarliSDKSwift;
 
 @interface ZarliAdMobMediationInterstitialAd () <ZarliInterstitialAdDelegate>
@@ -25,6 +26,7 @@
 }
 
 - (void)loadAd {
+  NSLog(@"[ZarliAdapter] loadAd called in ZarliAdMobMediationInterstitialAd");
   NSString *adUnitId = @"default-interstitial";
   double bidFloor = 0.0;
 

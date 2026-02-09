@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'ZarliSDKSwift'
-  s.version          = '1.3.61'
+  s.version          = '1.3.62'
   s.summary          = 'The official iOS SDK for the Zarli Ad Network.'
   s.description      = <<-DESC
     ZarliSDKSwift enables mobile publishers to seamlessly integrate high-performance, 
@@ -10,10 +10,12 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/zarli-ai/zarli-ios-sdk'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Zarli AI' => 'founders@zarli.ai' }
-  s.source           = { :http => 'https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.61/ZarliSDKSwift.xcframework.zip' }
+  s.source           = { :http => 'https://github.com/zarli-ai/zarli-ios-sdk/releases/download/1.3.62/ZarliSDKSwift.xcframework.zip' }
 
   s.ios.deployment_target = '13.0'
   s.swift_version = '5.0'
+
+  s.dependency 'ZIPFoundation', '~> 0.9'
 
   s.vendored_frameworks = 'ZarliSDKSwift.xcframework'
   
