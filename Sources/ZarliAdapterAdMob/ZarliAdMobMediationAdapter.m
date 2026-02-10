@@ -20,13 +20,13 @@
 
 + (GADVersionNumber)adSDKVersion {
   // Return Zarli SDK version
-  GADVersionNumber version = {1, 3, 62};
+  GADVersionNumber version = {1, 3, 63};
   return version;
 }
 
 + (GADVersionNumber)adapterVersion {
   // Return adapter version
-  GADVersionNumber version = {1, 3, 62};
+  GADVersionNumber version = {1, 3, 63};
   return version;
 }
 
